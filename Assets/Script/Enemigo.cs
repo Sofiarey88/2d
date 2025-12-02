@@ -6,6 +6,8 @@ public class Enemigo : MonoBehaviour
     public float velocidad = 3f;
     public int danoAlPlayer = 1; // resta 1 vida (círculo) por toque
 
+    public GameObject monedaPrefab; // 👉 arrastrá acá tu prefab de moneda
+
     private Transform jugador;
     private Rigidbody2D rb;
 
@@ -19,15 +21,28 @@ public class Enemigo : MonoBehaviour
     void Update()
     {
         if (jugador == null || rb == null) return;
+
         Vector2 direccion = (jugador.position - transform.position).normalized;
         rb.MovePosition(rb.position + direccion * velocidad * Time.deltaTime);
+
         transform.localScale = new Vector3(direccion.x > 0 ? 1 : -1, 1, 1);
     }
 
     public void RecibirDaño(int cantidad)
     {
         vida -= cantidad;
-        if (vida <= 0) Destroy(gameObject);
+
+        if (vida <= 0)
+        {
+            SoltarMoneda();
+            Destroy(gameObject);
+        }
+    }
+
+    void SoltarMoneda()
+    {
+        Debug.Log("Moneda instanciada en: " + transform.position);
+        Instantiate(monedaPrefab, transform.position, Quaternion.identity);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

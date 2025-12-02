@@ -6,6 +6,12 @@ public class EnemigoCorredor : MonoBehaviour
     public float fuerzaSaltoY = 8f;
     public float tiempoEntreSaltos = 0.5f;
 
+    [Header("Vida")]
+    public int vida = 3;
+
+    [Header("Drop")]
+    public GameObject monedaPrefab;  // ← AGREGADO
+
     private Rigidbody2D rb;
     private Transform jugador;
 
@@ -36,6 +42,30 @@ public class EnemigoCorredor : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
 
         rb.AddForce(new Vector2(fuerzaSaltoX * direccion, fuerzaSaltoY), ForceMode2D.Impulse);
+    }
+
+    public void RecibirDaño(int dmg)   // ← AGREGADO
+    {
+        vida -= dmg;
+
+        if (vida <= 0)
+        {
+            SoltarMoneda();
+            Destroy(gameObject);
+        }
+    }
+
+    void SoltarMoneda()   // ← AGREGADO
+    {
+        if (monedaPrefab != null)
+        {
+            Instantiate(monedaPrefab, transform.position, Quaternion.identity);
+            Debug.Log("Moneda soltada por EnemigoCorredor!");
+        }
+        else
+        {
+            Debug.LogWarning("No asignaste monedaPrefab en EnemigoCorredor");
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

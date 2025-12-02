@@ -1,17 +1,19 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 
 public class EnemigoDisparador : MonoBehaviour
 {
-
     [Header("Disparo")]
     public GameObject balaPrefab;
     public Transform puntoDisparo;
     public float tiempoEntreDisparos = 1.5f;
-    public float rangoDisparo = 6f;  // distancia mÌnima para disparar
+    public float rangoDisparo = 6f;  // distancia m√≠nima para disparar
 
     [Header("Vida")]
     public int vida = 3;
-    public int daÒoAlPlayer = 1;  // daÒo al jugador al tocarlo
+    public int da√±oAlPlayer = 1;  // da√±o al jugador al tocarlo
+
+    [Header("Drop")]
+    public GameObject monedaPrefab;   // ‚Üê AGREGADO
 
     private Transform jugador;
     private float proximoDisparo = 0f;
@@ -20,7 +22,7 @@ public class EnemigoDisparador : MonoBehaviour
     {
         jugador = GameObject.FindGameObjectWithTag("Player")?.transform;
         if (jugador == null)
-            Debug.LogWarning("No se encontrÛ el Player con tag 'Player'");
+            Debug.LogWarning("No se encontr√≥ el Player con tag 'Player'");
     }
 
     void Update()
@@ -29,7 +31,7 @@ public class EnemigoDisparador : MonoBehaviour
 
         float distancia = Vector2.Distance(transform.position, jugador.position);
 
-        // Solo dispara si el jugador est· dentro del rango
+        // Solo dispara si el jugador est√° dentro del rango
         if (distancia <= rangoDisparo)
         {
             ApuntarAlJugador();
@@ -51,18 +53,33 @@ public class EnemigoDisparador : MonoBehaviour
         puntoDisparo.rotation = Quaternion.Euler(0, 0, angulo);
     }
 
-
     void Disparar()
     {
         Instantiate(balaPrefab, puntoDisparo.position, puntoDisparo.rotation);
-        Debug.Log("°Bala disparada!");
+        Debug.Log("¬°Bala disparada!");
     }
 
-    public void RecibirDaÒo(int dmg)
+    public void RecibirDa√±o(int dmg)
     {
         vida -= dmg;
         if (vida <= 0)
+        {
+            SoltarMoneda();    // ‚Üê AGREGADO
             Destroy(gameObject);
+        }
+    }
+
+    void SoltarMoneda()    // ‚Üê AGREGADO
+    {
+        if (monedaPrefab != null)
+        {
+            Instantiate(monedaPrefab, transform.position, Quaternion.identity);
+            Debug.Log("Moneda soltada!");
+        }
+        else
+        {
+            Debug.LogWarning("No asignaste monedaPrefab en el enemigo");
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -72,11 +89,9 @@ public class EnemigoDisparador : MonoBehaviour
             MovimientoJugador pj = collision.collider.GetComponent<MovimientoJugador>();
             if (pj != null)
             {
-                pj.TomarDaÒo(daÒoAlPlayer);
-                Debug.Log("El jugador recibiÛ daÒo al chocar con el enemigo");
+                pj.TomarDa√±o(da√±oAlPlayer);
+                Debug.Log("El jugador recibi√≥ da√±o al chocar con el enemigo");
             }
         }
     }
 }
-
-
