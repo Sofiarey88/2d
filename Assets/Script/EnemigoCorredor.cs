@@ -1,10 +1,10 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class EnemigoCorredor : MonoBehaviour
 {
-    public float fuerzaSaltoX = 8f;
-    public float fuerzaSaltoY = 18f;
-    public float tiempoEntreSaltos = 0.1f;
+    public float fuerzaSaltoX = 4f;
+    public float fuerzaSaltoY = 8f;
+    public float tiempoEntreSaltos = 0.5f;
 
     private Rigidbody2D rb;
     private Transform jugador;
@@ -32,10 +32,23 @@ public class EnemigoCorredor : MonoBehaviour
 
         float direccion = Mathf.Sign(jugador.position.x - transform.position.x);
 
-        // Limpio la velocidad para que todos los saltos sean iguales
+        // Reinicio velocidad para saltos consistentes
         rb.linearVelocity = Vector2.zero;
 
-        // SALTO CONSTANTE: arriba + hacia el jugador
         rb.AddForce(new Vector2(fuerzaSaltoX * direccion, fuerzaSaltoY), ForceMode2D.Impulse);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Player"))
+        {
+            MovimientoJugador pj = collision.collider.GetComponent<MovimientoJugador>();
+
+            if (pj != null)
+            {
+                pj.TomarDaño(2);   // le quita 2 vidas
+                Debug.Log("El enemigo hizo daño: -2 vidas");
+            }
+        }
     }
 }

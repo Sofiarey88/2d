@@ -1,21 +1,26 @@
 using UnityEngine;
 
-
 public class EnemigoDisparador : MonoBehaviour
 {
+
+    [Header("Disparo")]
     public GameObject balaPrefab;
     public Transform puntoDisparo;
     public float tiempoEntreDisparos = 1.5f;
+    public float rangoDisparo = 6f;  // distancia mínima para disparar
 
-    public float rangoDisparo = 6f;  // distancia para empezar a disparar
+    [Header("Vida")]
     public int vida = 3;
+    public int dañoAlPlayer = 1;  // daño al jugador al tocarlo
 
     private Transform jugador;
     private float proximoDisparo = 0f;
 
     void Start()
     {
-        jugador = GameObject.FindGameObjectWithTag("Player").transform;
+        jugador = GameObject.FindGameObjectWithTag("Player")?.transform;
+        if (jugador == null)
+            Debug.LogWarning("No se encontró el Player con tag 'Player'");
     }
 
     void Update()
@@ -24,7 +29,7 @@ public class EnemigoDisparador : MonoBehaviour
 
         float distancia = Vector2.Distance(transform.position, jugador.position);
 
-        // Solo dispara si el jugador está cerca
+        // Solo dispara si el jugador está dentro del rango
         if (distancia <= rangoDisparo)
         {
             ApuntarAlJugador();
@@ -41,12 +46,16 @@ public class EnemigoDisparador : MonoBehaviour
     {
         Vector3 dir = jugador.position - transform.position;
         float angulo = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, angulo);
+
+        // SOLO rota el punto de disparo, no el enemigo
+        puntoDisparo.rotation = Quaternion.Euler(0, 0, angulo);
     }
+
 
     void Disparar()
     {
         Instantiate(balaPrefab, puntoDisparo.position, puntoDisparo.rotation);
+        Debug.Log("¡Bala disparada!");
     }
 
     public void RecibirDaño(int dmg)
@@ -54,6 +63,19 @@ public class EnemigoDisparador : MonoBehaviour
         vida -= dmg;
         if (vida <= 0)
             Destroy(gameObject);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Player"))
+        {
+            MovimientoJugador pj = collision.collider.GetComponent<MovimientoJugador>();
+            if (pj != null)
+            {
+                pj.TomarDaño(dañoAlPlayer);
+                Debug.Log("El jugador recibió daño al chocar con el enemigo");
+            }
+        }
     }
 }
 

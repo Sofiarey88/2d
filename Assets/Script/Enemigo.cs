@@ -1,9 +1,10 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 
 public class Enemigo : MonoBehaviour
 {
     public int vida = 3;
     public float velocidad = 3f;
+    public int danoAlPlayer = 1; // resta 1 vida (c√≠rculo) por toque
 
     private Transform jugador;
     private Rigidbody2D rb;
@@ -11,49 +12,32 @@ public class Enemigo : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-
-        // El enemigo NO usa gravedad porque vuela
-        if (rb != null)
-        {
-            rb.gravityScale = 0;
-        }
-
-        // Busca al jugador por tag
+        if (rb != null) rb.gravityScale = 0f;
         jugador = GameObject.FindGameObjectWithTag("Player")?.transform;
     }
 
     void Update()
     {
-        if (jugador == null) return;
-
-        // DirecciÛn hacia el jugador
+        if (jugador == null || rb == null) return;
         Vector2 direccion = (jugador.position - transform.position).normalized;
-
-        // Movimiento volando hacia el jugador
         rb.MovePosition(rb.position + direccion * velocidad * Time.deltaTime);
-
-        // Mirar hacia el jugador (opcional)
-        if (direccion.x > 0)
-            transform.localScale = new Vector3(1, 1, 1);
-        else
-            transform.localScale = new Vector3(-1, 1, 1);
+        transform.localScale = new Vector3(direccion.x > 0 ? 1 : -1, 1, 1);
     }
 
-
-    // --- VIDA Y DA—O ---
-    public void RecibirDaÒo(int cantidad)
+    public void RecibirDa√±o(int cantidad)
     {
         vida -= cantidad;
-        if (vida <= 0)
-            Destroy(gameObject);
+        if (vida <= 0) Destroy(gameObject);
     }
 
-    // Si toca al jugador lo mata
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (!collision.CompareTag("Player")) return;
+
+        MovimientoJugador player = collision.GetComponent<MovimientoJugador>();
+        if (player != null)
         {
-            Destroy(collision.gameObject); // Mata al jugador
+            player.TomarDa√±o(danoAlPlayer);
         }
     }
 }
