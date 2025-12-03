@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1814816}
   - component: {fileID: 1814815}
+  - component: {fileID: 1814817}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -163,6 +164,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1814817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1814814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cb56bcd445e7a34d8c178464cdbc4fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panelPerdiste: {fileID: 0}
+  panelGanaste: {fileID: 0}
+  textoTiempoFinal: {fileID: 0}
+  textoPuntosFinales: {fileID: 0}
 --- !u!1 &19727550
 GameObject:
   m_ObjectHideFlags: 0
@@ -741,6 +758,7 @@ RectTransform:
   - {fileID: 1104532343}
   - {fileID: 1123958768}
   - {fileID: 243926987}
+  - {fileID: 347252816}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -926,12 +944,12 @@ RectTransform:
   m_Children:
   - {fileID: 614048203}
   - {fileID: 761154831}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 206468628}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 458.75, y: 174.24998}
-  m_SizeDelta: {x: 917.5, y: 348.49997}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &406625457
 GameObject:
@@ -3987,7 +4005,6 @@ SceneRoots:
   - {fileID: 1166910308}
   - {fileID: 1632411390}
   - {fileID: 206468628}
-  - {fileID: 347252816}
   - {fileID: 139032492}
   - {fileID: 2099854923}
   - {fileID: 1965349384}
